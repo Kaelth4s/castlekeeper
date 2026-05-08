@@ -68,3 +68,12 @@ castlekeeper/
 
 **kaelth4s** (GitHub) — ключник этого цифрового замка.  
 Проект родился в 2026 году и продолжает строиться.
+
+---
+
+## 📄 Лицензия
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+Этот проект распространяется под лицензией MIT.  
+Полный текст лицензии доступен в файле [LICENSE](LICENSE).
