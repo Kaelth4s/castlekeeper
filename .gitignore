@@ -6,6 +6,7 @@
 .obsidian/workspace-mobile*.json
 .obsidian/.hotreload
 .obsidian/cache
+copilot/
 
 # Корзина Obsidian (если vault в корне)
 .trash/
