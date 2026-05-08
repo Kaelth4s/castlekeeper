@@ -1,0 +1,16 @@
+{
+  "errorNoticeTimeout": 0,
+  "language": "en",
+  "noticeTimeout": 5,
+  "openChangelogOnUpdate": false,
+  "showConfigurationFolder": false,
+  "showHiddenFiles": true,
+  "showingRules": [
+    "+/",
+    "-/\\.git(?:\\/|$)/u",
+    "-/\\.venv(?:\\/|$)/u",
+    "-/\\.idea(?:\\/|$)/u",
+    "-/\\.env$/u",
+    "-/\\.gitignore$/u"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "attachmentFolderPath": "notes",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "notes",
+  "openBehavior": "file:notes/welcome",
+  "showUnsupportedFiles": true
+}
