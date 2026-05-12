@@ -15,7 +15,6 @@ castlekeeper.kaelth4s.ru/api
 - GET (все замки): /api/castles
 - GET (случайный замок): /api/castles/random
 - GET (по ID): /api/castles/{id}
-- GET (по name): /api/castles?name=
 - POST (добавить замок): /api/castles
 - DELETE (удалить замок по ID): /api/castles/{id}
 - PUT (редактировать замок по ID): /api/castles/{id}
@@ -23,12 +22,18 @@ castlekeeper.kaelth4s.ru/api
 Авторы:
 - GET (все авторы): /api/authors
 - GET (по ID): /api/authors/{id}
-- GET (по name): /api/authors?name=
 - POST (добавить автора): /api/authors
 - DELETE (удалить автора по ID): /api/authors/{id}
 - PUT (редактировать автора по ID): /api/authors/{id}
 
-Материалы
+Типы авторов:
+- GET (все типы): /api/author-types
+- GET (по ID): /api/author-types/{id}
+- POST (добавить тип): /api/author-types
+- DELETE (удалить тип по ID): /api/author-types/{id}
+- PUT (редактировать тип по ID): /api/author-types/{id}
+
+Материалы:
 - GET (все материалы): /api/materials
 - GET (по ID): /api/materials/{id}
 - POST (добавить материал): /api/materials
