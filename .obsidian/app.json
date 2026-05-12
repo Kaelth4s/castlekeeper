@@ -4,5 +4,6 @@
   "newFileFolderPath": "notes",
   "openBehavior": "file:notes/welcome",
   "showUnsupportedFiles": true,
-  "promptDelete": false
+  "promptDelete": false,
+  "alwaysUpdateLinks": true
 }
