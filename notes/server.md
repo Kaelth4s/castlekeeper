@@ -1,4 +1,4 @@
-сервер располагается на домене
+Сервер располагается на домене
 
 castlekeeper.kaelth4s.ru
 
@@ -23,6 +23,7 @@ castlekeeper.kaelth4s.ru/api
 Авторы:
 - GET (все авторы): /api/authors
 - GET (по ID): /api/authors/{id}
+- GET (по name): /api/authors?name=
 - POST (добавить автора): /api/authors
 - DELETE (удалить автора по ID): /api/authors/{id}
 - PUT (редактировать автора по ID): /api/authors/{id}
