@@ -51,13 +51,7 @@ jobs:
           echo "DSN: postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable"
 
       - name: Generate documentation
-        env:
-          DB_USER: test
-          DB_PASSWORD: test
-          DB_HOST: localhost
-          DB_PORT: 5432
-          DB_NAME: testdb
-        run: tbls doc
+        run: tbls doc --dsn="postgres://test:test@localhost:5432/testdb?sslmode=disable"
 
       - name: Commit and push updated docs
         run: |
