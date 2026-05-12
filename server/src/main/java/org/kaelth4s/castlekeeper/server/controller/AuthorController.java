@@ -1,5 +1,7 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import org.kaelth4s.castlekeeper.server.model.Author;
 import org.kaelth4s.castlekeeper.server.service.AuthorService;
@@ -30,16 +32,18 @@ public class AuthorController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/authors")
     public ResponseEntity<Author> create(@Valid @RequestBody Author author) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(author));
     }
 
     @PutMapping("/authors/{id}")
-    public ResponseEntity<Author> update(@Valid @PathVariable Long id, @RequestBody Author author) {
+    public ResponseEntity<Author> update(@PathVariable Long id, @Valid @RequestBody Author author) {
         return ResponseEntity.ok(service.update(id, author));
     }
 
+    @ApiResponse(responseCode = "204", description = "OK")
     @DeleteMapping("/authors/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

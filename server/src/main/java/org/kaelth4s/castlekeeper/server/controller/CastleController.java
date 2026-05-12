@@ -1,5 +1,8 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import org.kaelth4s.castlekeeper.server.model.Castle;
 import org.kaelth4s.castlekeeper.server.service.CastleService;
 import org.springframework.http.HttpStatus;
@@ -35,16 +38,18 @@ public class CastleController {
         return service.getRandom();
     }
 
+    @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/castles")
-    public ResponseEntity<Castle> create(@RequestBody Castle castle) {
+    public ResponseEntity<Castle> create(@Valid @RequestBody Castle castle) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(castle));
     }
 
     @PutMapping("/castles/{id}")
-    public ResponseEntity<Castle> update(@PathVariable Long id, @RequestBody Castle castle) {
+    public ResponseEntity<Castle> update(@PathVariable Long id, @Valid @RequestBody Castle castle) {
         return ResponseEntity.ok(service.update(id, castle));
     }
 
+    @ApiResponse(responseCode = "204", description = "OK")
     @DeleteMapping("/castles/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

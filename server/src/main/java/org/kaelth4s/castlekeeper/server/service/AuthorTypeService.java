@@ -1,5 +1,6 @@
 package org.kaelth4s.castlekeeper.server.service;
 
+import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.AuthorType;
 import org.kaelth4s.castlekeeper.server.repository.AuthorTypeRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class AuthorTypeService {
     }
 
     public AuthorType create(AuthorType authorType) {
+        authorType.setId(null);
         return repository.save(authorType);
     }
 
@@ -34,11 +36,13 @@ public class AuthorTypeService {
             existing.setName(updated.getName());
             existing.setDescription(updated.getDescription());
             return repository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("AuthorType not found: " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("AuthorType not found with id: " + id));
     }
 
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("AuthorType not found with id: " + id);
+        }
         repository.deleteById(id);
     }
 }
-

@@ -1,5 +1,7 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.kaelth4s.castlekeeper.server.model.Reconstruction;
 import org.kaelth4s.castlekeeper.server.service.ReconstructionService;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,7 @@ public class ReconstructionController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/reconstructions")
     public ResponseEntity<Reconstruction> create(@RequestBody Reconstruction reconstruction) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(reconstruction));
@@ -39,6 +42,7 @@ public class ReconstructionController {
         return ResponseEntity.ok(service.update(id, reconstruction));
     }
 
+    @ApiResponse(responseCode = "204", description = "OK")
     @DeleteMapping("/reconstructions/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

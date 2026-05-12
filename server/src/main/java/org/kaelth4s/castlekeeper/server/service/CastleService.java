@@ -1,5 +1,6 @@
 package org.kaelth4s.castlekeeper.server.service;
 
+import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.Castle;
 import org.kaelth4s.castlekeeper.server.repository.CastleRepository;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ public class CastleService {
     }
 
     public Castle create(Castle castle) {
+        castle.setId(null);
         return repository.save(castle);
     }
 
@@ -39,10 +41,13 @@ public class CastleService {
             existing.setHeightM(updated.getHeightM());
             existing.setMaterial(updated.getMaterial());
             return repository.save(existing);
-        }).orElseThrow(() -> new RuntimeException("Castle not found: " + id));
+        }).orElseThrow(() -> new ResourceNotFoundException("Castle not found with id: " + id));
     }
 
     public void delete(Long id) {
+        if (!repository.existsById(id)) {
+            throw new ResourceNotFoundException("Castle not found with id: " + id);
+        }
         repository.deleteById(id);
     }
 
@@ -50,4 +55,3 @@ public class CastleService {
         return repository.findRandom();
     }
 }
-
