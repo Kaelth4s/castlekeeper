@@ -46,6 +46,10 @@ jobs:
             -password=test \
             -locations=filesystem:server/src/main/resources/db/migration
 
+      - name: Debug DSN
+        run: |
+          echo "DSN: postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable"
+
       - name: Generate documentation
         env:
           DB_USER: test
