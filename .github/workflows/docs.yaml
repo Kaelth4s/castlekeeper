@@ -4,6 +4,10 @@ on:
   push:
     branches: [ main ]
 
+# Добавляем разрешения для GITHUB_TOKEN
+permissions:
+  contents: write   # чтобы пушить коммиты с документацией
+
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
@@ -45,10 +49,6 @@ jobs:
             -user=test \
             -password=test \
             -locations=filesystem:server/src/main/resources/db/migration
-
-      - name: Debug DSN
-        run: |
-          echo "DSN: postgres://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable"
 
       - name: Generate documentation
         env:
