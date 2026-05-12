@@ -11,9 +11,10 @@ castlekeeper.kaelth4s.ru/api
 
 CRUD:
 GET (все замки): /api/castles
-GET (случайный замок): /api/castle
-GET (по id): /api/castle/{id}
-POST (добавить замок): /api/castle/{id}
-PUT (отредактировать замок): /api/castle/{id}
-DELETE (удалить замок): /api/castle/{id}
+GET (случайный замок): /api/castles/random
+GET (по id): /api/castles/{id}
+GET (по name): /api/castles?name=
+POST (добавить замок): /api/castles
+PUT (отредактировать замок): /api/castles/{id}
+DELETE (удалить замок): /api/castles/{id}
 
