@@ -1,0 +1,45 @@
+tables:
+  - name: author
+    columns:
+      - { name: id, type: bigserial, pk: true }
+      - { name: name, type: text }
+      - { name: author_type_id, type: bigint, fk: author_type.id }
+    relationships:
+      - { type: many_to_one, target: author_type, fk_local: author_type_id, fk_target: id }
+
+  - name: author_type
+    columns:
+      - { name: id, type: bigserial, pk: true }
+      - { name: name, type: text, unique: true }
+      - { name: description, type: text }
+    relationships: []
+
+  - name: castle
+    columns:
+      - { name: id, type: bigserial, pk: true }
+      - { name: name, type: text }
+      - { name: description, type: text }
+      - { name: author_id, type: bigint, fk: author.id }
+      - { name: built_year, type: integer }
+      - { name: destroyed_year, type: integer }
+      - { name: height_m, type: numeric }
+      - { name: material_id, type: bigint, fk: material.id }
+    relationships:
+      - { type: many_to_one, target: author, fk_local: author_id, fk_target: id }
+      - { type: many_to_one, target: material, fk_local: material_id, fk_target: id }
+
+  - name: material
+    columns:
+      - { name: id, type: bigserial, pk: true }
+      - { name: name, type: text, unique: true }
+    relationships: []
+
+  - name: reconstruction
+    columns:
+      - { name: id, type: bigserial, pk: true }
+      - { name: castle_id, type: bigint, fk: castle.id }
+      - { name: author_id, type: bigint, fk: author.id }
+      - { name: reconstruction_year, type: integer }
+    relationships:
+      - { type: many_to_one, target: castle, fk_local: castle_id, fk_target: id }
+      - { type: many_to_one, target: author, fk_local: author_id, fk_target: id }
