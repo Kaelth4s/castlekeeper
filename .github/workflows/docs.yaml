@@ -33,6 +33,17 @@ jobs:
           curl -sL https://github.com/k1LoW/tbls/releases/download/v1.77.0/tbls_v1.77.0_linux_amd64.tar.gz | tar xz
           sudo mv tbls /usr/local/bin/
 
+      - name: Add flyway to Maven plugin groups
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <pluginGroups>
+              <pluginGroup>org.flywaydb</pluginGroup>
+            </pluginGroups>
+          </settings>
+          EOF
+
       - name: Run Flyway migrations on temporary DB
         run: |
           mvn flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/testdb -Dflyway.user=test -Dflyway.password=test
