@@ -1,0 +1,54 @@
+# .github/workflows/docs.yml
+name: Refresh Database Schema Docs
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  generate-docs:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install tbls
+        run: |
+          curl -sL https://github.com/k1LoW/tbls/releases/download/v1.77.0/tbls_v1.77.0_linux_amd64.tar.gz | tar xz
+          sudo mv tbls /usr/local/bin/
+
+      - name: Run Flyway migrations on temporary DB
+        run: |
+          mvn flyway:migrate -Dflyway.url=jdbc:postgresql://localhost:5432/testdb -Dflyway.user=test -Dflyway.password=test
+
+      - name: Generate documentation
+        env:
+          DB_USER: test
+          DB_PASSWORD: test
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_NAME: testdb
+        run: tbls doc
+
+      - name: Commit and push updated docs
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add docs/database-schema/
+          git diff --staged --quiet || (git commit -m "chore: update db schema docs [skip ci]" && git push)

@@ -1,0 +1,6 @@
+# .tbls.yml
+dsn: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:{DB_PORT}/${DB_NAME}?sslmode=disable
+docPath: docs/database-schema
+schema: public
+exclude:
+  - flyway_schema_history
