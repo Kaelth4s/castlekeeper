@@ -17,13 +17,13 @@ The project was born from a desire to learn Spring Boot, Docker, and clean archi
 
 ## 🏗 Architecture
 
-| Component        | Technology                       | Description                                   |
-|------------------|----------------------------------|-----------------------------------------------|
-| **Telegram Bot** | Java 25 (LTS), Maven             | Processes commands, calls REST API            |
-| **REST API**     | Spring Boot 3, Java 17, Flyway   | CRUD for castles, authors, materials          |
-| **Database**     | PostgreSQL 16 (Docker)           | Stores castles, authors, materials, reconstructions |
-| **Documentation**| Obsidian (root vault)            | Notes, architecture, API contracts, canvas diagrams |
-| **Infrastructure**| Docker Compose                  | One-command PostgreSQL setup                  |
+| Component          | Technology                       | Description                                   |
+|--------------------|----------------------------------|-----------------------------------------------|
+| **Telegram Bot**   | Java 25 (LTS), Maven             | Processes commands, calls REST API            |
+| **REST API**       | Spring Boot 3, Java 17, Flyway   | CRUD for castles, authors, author types, materials |
+| **Database**       | PostgreSQL 16 (Docker)           | Stores castles, authors, materials, reconstructions |
+| **Documentation**  | Obsidian (root vault)            | Notes, architecture, API contracts, canvas diagrams |
+| **Infrastructure** | Docker Compose                   | One-command PostgreSQL setup                  |
 
 ### Data flow
 
@@ -86,6 +86,7 @@ author_type ──< author ──< castle >── material
 | `material` | Building material | `id`, `name` (unique) |
 | `castle` | The castle itself | `id`, `name`, `description`, `author_id` (FK), `built_year`, `destroyed_year`, `height_m`, `material_id` (FK) |
 | `reconstruction` | Reconstruction event | `id`, `castle_id` (FK), `author_id` (FK), `reconstruction_year` |
+| `author_type` | Author title category | `id`, `name` (unique), `description` |
 
 > 📖 Full ERD diagram: `notes/database/schema.md` — auto-generated from `schema-draft.yaml` via `generate_schema.py`.
 
@@ -93,44 +94,57 @@ author_type ──< author ──< castle >── material
 
 ## 🤖 Bot Commands
 
-The bot responds to Telegram messages with a medieval narrative style. It manages three entities:
+The bot responds to Telegram messages with a medieval narrative style.  
+Selection-based actions use **inline keyboards** (5 items per page with ◀ ▶ pagination) — no manual ID entry.
 
 ### 🏰 Castles
-| Command | Description |
-|---------|-------------|
-| `/castles` | List all castles |
-| `/castle <ID>` | View castle by ID |
-| `/search <name>` | Search castle by name |
-| `/random` | Random castle |
-| `/addcastle` | Add a new castle |
-| `/editcastle <ID>` | Edit a castle |
-| `/deletecastle <ID>` | Delete a castle |
+| Command / Action           | Description                                                                                        |
+| -------------------------- | -------------------------------------------------------------------------------------------------- |
+| `/castles`                 | List all castles (text output)                                                                     |
+| `/castlemenu` → 👁️ Select | View castle by picking from inline keyboard                                                        |
+| `/random`                  | Random castle (text output)                                                                        |
+| `/addcastle`               | 7-step wizard: name → desc → author picker → year → destroyed → height → material picker → confirm |
+| `/castlemenu` → ✒️ Edit    | Pick castle → pick field → enter value / pick from list → confirm                                  |
+| `/castlemenu` → 💥 Delete  | Pick castle → confirm ✅/❌                                                                          |
 
 ### 👥 Authors
-| Command | Description |
-|---------|-------------|
-| `/authors` | List all authors |
-| `/author <ID>` | View author by ID |
-| `/searchauthor <name>` | Search author by name |
-| `/addauthor` | Add a new author |
-| `/editauthor <ID>` | Edit an author |
-| `/deleteauthor <ID>` | Delete an author |
+| Command / Action           | Description                                                              |
+| -------------------------- | ------------------------------------------------------------------------ |
+| `/authors`                 | List all authors (text output)                                           |
+| `/authormenu` → 👁️ Select | View author by picking from inline keyboard                              |
+| `/addauthor`               | Wizard: name → type picker → confirm                                     |
+| `/authormenu` → ✒️ Edit    | Pick author → pick field (name/type) → enter value / pick type → confirm |
+| `/authormenu` → 💥 Delete  | Pick author → confirm ✅/❌                                                |
+
+### 🏷️ Author Types
+| Command / Action         | Description                                    |
+| ------------------------ | ---------------------------------------------- |
+| `/author_types`          | List all types (text output)                   |
+| `/addauthor_type`        | Wizard: name → description → confirm           |
+| `/atypemenu` → ✒️ Edit   | Pick type → pick field → enter value → confirm |
+| `/atypemenu` → 💥 Delete | Pick type → confirm ✅/❌                        |
 
 ### 🧱 Materials
-| Command | Description |
-|---------|-------------|
-| `/materials` | List all materials |
-| `/material <ID>` | View material by ID |
-| `/addmaterial` | Add a new material |
-| `/editmaterial <ID>` | Edit a material |
-| `/deletematerial <ID>` | Delete a material |
+| Command / Action | Description |
+|------------------|-------------|
+| `/materials` | List all materials (text output) |
+| `/materialmenu` → 👁️ Select | View material by picking from inline keyboard |
+| `/addmaterial` | Enter name → confirm |
+| `/materialmenu` → ✒️ Edit | Pick material → enter new name → confirm |
+| `/materialmenu` → 💥 Delete | Pick material → confirm ✅/❌ |
 
 ### 🏰 Navigation
 | Command | Description |
 |---------|-------------|
 | `/start` | Return to the castle gates |
-| `/menu` | Return to the main hall |
+| `/menu` | Return to the main hall (3 wings) |
 | `/help` | Open the foliant with all commands |
+
+### 💡 UX Design
+- **Text lists**: `/castles`, `/authors`, `/materials`, `/random` — simple text output, no buttons
+- **Inline keyboard pickers**: all "Select", "Edit", "Delete" actions — 5 items per page with ◀/▶ pagination
+- **Wizards**: multi-step forms with confirmation screens
+- **FK fields**: always picked from inline keyboard lists, never as raw IDs
 
 > 🗺️ Full dialog flow: `notes/bot/dialogs.canvas` (Obsidian Canvas)
 
@@ -141,25 +155,32 @@ The bot responds to Telegram messages with a medieval narrative style. It manage
 **Base URL:** `http://localhost:8080/api/` (local) or `https://castlekeeper.kaelth4s.ru/api` (production)
 
 ### 🏰 Castles
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/castles` | List all castles |
-| GET | `/api/castles/random` | Get a random castle |
-| GET | `/api/castles/{id}` | Get castle by ID |
-| GET | `/api/castles?name=` | Search castle by name |
-| POST | `/api/castles` | Create a castle |
-| PUT | `/api/castles/{id}` | Update a castle |
-| DELETE | `/api/castles/{id}` | Delete a castle |
+| Method | Endpoint              | Description           |
+| ------ | --------------------- | --------------------- |
+| GET    | `/api/castles`        | List all castles      |
+| GET    | `/api/castles/random` | Get a random castle   |
+| GET    | `/api/castles/{id}`   | Get castle by ID      |
+| POST   | `/api/castles`        | Create a castle       |
+| PUT    | `/api/castles/{id}`   | Update a castle       |
+| DELETE | `/api/castles/{id}`   | Delete a castle       |
 
 ### 👥 Authors
+| Method | Endpoint             | Description           |
+| ------ | -------------------- | --------------------- |
+| GET    | `/api/authors`       | List all authors      |
+| GET    | `/api/authors/{id}`  | Get author by ID      |
+| POST   | `/api/authors`       | Create an author      |
+| PUT    | `/api/authors/{id}`  | Update an author      |
+| DELETE | `/api/authors/{id}`  | Delete an author      |
+
+### 🏷️ Author Types
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/authors` | List all authors |
-| GET | `/api/authors/{id}` | Get author by ID |
-| GET | `/api/authors?name=` | Search author by name |
-| POST | `/api/authors` | Create an author |
-| PUT | `/api/authors/{id}` | Update an author |
-| DELETE | `/api/authors/{id}` | Delete an author |
+| GET | `/api/author-types` | List all author types |
+| GET | `/api/author-types/{id}` | Get type by ID |
+| POST | `/api/author-types` | Create a type |
+| PUT | `/api/author-types/{id}` | Update a type |
+| DELETE | `/api/author-types/{id}` | Delete a type |
 
 ### 🧱 Materials
 | Method | Endpoint | Description |
