@@ -1,0 +1,4 @@
+CREATE TABLE material (
+    id BIGSERIAL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE
+);
