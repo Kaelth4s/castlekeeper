@@ -65,7 +65,7 @@ jobs:
           DB_HOST: localhost
           DB_PORT: 5432
           DB_NAME: testdb
-        run: tbls doc
+        run: tbls doc --rm-dist
 
       - name: Commit and push updated docs
         run: |
