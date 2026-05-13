@@ -1,9 +1,8 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.kaelth4s.castlekeeper.server.model.AuthorType;
+import org.kaelth4s.castlekeeper.server.dto.AuthorTypeRequest;
+import org.kaelth4s.castlekeeper.server.dto.AuthorTypeResponse;
 import org.kaelth4s.castlekeeper.server.service.AuthorTypeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,29 +20,26 @@ public class AuthorTypeController {
     }
 
     @GetMapping("/author-types")
-    public List<AuthorType> getAll() {
+    public List<AuthorTypeResponse> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/author-types/{id}")
-    public ResponseEntity<AuthorType> getById(@PathVariable Long id) {
-        return service.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<AuthorTypeResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
-    @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/author-types")
-    public ResponseEntity<AuthorType> create(@Valid @RequestBody AuthorType authorType) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(authorType));
+    public ResponseEntity<AuthorTypeResponse> create(@Valid @RequestBody AuthorTypeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
     }
 
     @PutMapping("/author-types/{id}")
-    public ResponseEntity<AuthorType> update(@PathVariable Long id, @Valid @RequestBody AuthorType authorType) {
-        return ResponseEntity.ok(service.update(id, authorType));
+    public ResponseEntity<AuthorTypeResponse> update(@PathVariable Long id,
+                                                      @Valid @RequestBody AuthorTypeRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
-    @ApiResponse(responseCode = "204", description = "OK")
     @DeleteMapping("/author-types/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

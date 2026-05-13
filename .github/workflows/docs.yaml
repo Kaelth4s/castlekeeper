@@ -4,16 +4,21 @@ on:
   push:
     branches: [ main ]
 
-# Добавляем разрешения для GITHUB_TOKEN
 permissions:
-  contents: write   # чтобы пушить коммиты с документацией
+  contents: write
 
 jobs:
   generate-docs:
     runs-on: ubuntu-latest
+
+    # --- Database ---
+    # CI spins up a temporary PostgreSQL. Credentials are test-only (never exposed).
+    # For staging/production: replace with GitHub Secrets + a self-hosted runner that
+    # connects to the actual staging DB. The .tbls.yml already reads from env vars,
+    # so you only need to change the env block below — no code changes needed.
     services:
       postgres:
-        image: postgres:15
+        image: postgres:16-alpine
         env:
           POSTGRES_USER: test
           POSTGRES_PASSWORD: test
@@ -28,8 +33,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install Flyway CLI
         run: |
@@ -50,7 +53,12 @@ jobs:
             -password=test \
             -locations=filesystem:server/src/main/resources/db/migration
 
-      - name: Generate documentation
+      - name: Generate tbls documentation
+        # These env vars are read by .tbls.yml via ${DB_USER} etc.
+        # To switch to staging: replace values with GitHub Secrets
+        #   DB_USER: ${{ secrets.STAGING_DB_USER }}
+        #   DB_PASSWORD: ${{ secrets.STAGING_DB_PASSWORD }}
+        #   ...
         env:
           DB_USER: test
           DB_PASSWORD: test

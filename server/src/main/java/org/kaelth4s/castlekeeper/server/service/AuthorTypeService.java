@@ -1,5 +1,7 @@
 package org.kaelth4s.castlekeeper.server.service;
 
+import org.kaelth4s.castlekeeper.server.dto.AuthorTypeRequest;
+import org.kaelth4s.castlekeeper.server.dto.AuthorTypeResponse;
 import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.AuthorType;
 import org.kaelth4s.castlekeeper.server.repository.AuthorTypeRepository;
@@ -7,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -18,24 +19,28 @@ public class AuthorTypeService {
         this.repository = repository;
     }
 
-    public List<AuthorType> getAll() {
-        return repository.findAll();
+    public List<AuthorTypeResponse> getAll() {
+        return repository.findAll().stream().map(this::toResponse).toList();
     }
 
-    public Optional<AuthorType> getById(Long id) {
-        return repository.findById(id);
+    public AuthorTypeResponse getById(Long id) {
+        return repository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("AuthorType not found with id: " + id));
     }
 
-    public AuthorType create(AuthorType authorType) {
-        authorType.setId(null);
-        return repository.save(authorType);
+    public AuthorTypeResponse create(AuthorTypeRequest request) {
+        AuthorType entity = new AuthorType();
+        entity.setName(request.getName());
+        entity.setDescription(request.getDescription());
+        return toResponse(repository.save(entity));
     }
 
-    public AuthorType update(Long id, AuthorType updated) {
+    public AuthorTypeResponse update(Long id, AuthorTypeRequest request) {
         return repository.findById(id).map(existing -> {
-            existing.setName(updated.getName());
-            existing.setDescription(updated.getDescription());
-            return repository.save(existing);
+            existing.setName(request.getName());
+            existing.setDescription(request.getDescription());
+            return toResponse(repository.save(existing));
         }).orElseThrow(() -> new ResourceNotFoundException("AuthorType not found with id: " + id));
     }
 
@@ -44,5 +49,9 @@ public class AuthorTypeService {
             throw new ResourceNotFoundException("AuthorType not found with id: " + id);
         }
         repository.deleteById(id);
+    }
+
+    private AuthorTypeResponse toResponse(AuthorType entity) {
+        return new AuthorTypeResponse(entity.getId(), entity.getName(), entity.getDescription());
     }
 }

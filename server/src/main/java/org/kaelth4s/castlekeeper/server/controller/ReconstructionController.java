@@ -1,8 +1,8 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.kaelth4s.castlekeeper.server.model.Reconstruction;
+import jakarta.validation.Valid;
+import org.kaelth4s.castlekeeper.server.dto.ReconstructionRequest;
+import org.kaelth4s.castlekeeper.server.dto.ReconstructionResponse;
 import org.kaelth4s.castlekeeper.server.service.ReconstructionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,29 +20,26 @@ public class ReconstructionController {
     }
 
     @GetMapping("/reconstructions")
-    public List<Reconstruction> getAll() {
+    public List<ReconstructionResponse> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/reconstructions/{id}")
-    public ResponseEntity<Reconstruction> getById(@PathVariable Long id) {
-        return service.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<ReconstructionResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
-    @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/reconstructions")
-    public ResponseEntity<Reconstruction> create(@RequestBody Reconstruction reconstruction) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(reconstruction));
+    public ResponseEntity<ReconstructionResponse> create(@Valid @RequestBody ReconstructionRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
     }
 
     @PutMapping("/reconstructions/{id}")
-    public ResponseEntity<Reconstruction> update(@PathVariable Long id, @RequestBody Reconstruction reconstruction) {
-        return ResponseEntity.ok(service.update(id, reconstruction));
+    public ResponseEntity<ReconstructionResponse> update(@PathVariable Long id,
+                                                          @Valid @RequestBody ReconstructionRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
-    @ApiResponse(responseCode = "204", description = "OK")
     @DeleteMapping("/reconstructions/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

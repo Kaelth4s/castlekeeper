@@ -1,11 +1,10 @@
 package org.kaelth4s.castlekeeper.server.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -16,10 +15,8 @@ import java.math.BigDecimal;
 public class Castle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long id;
 
-    @NotBlank(message = "Castle name must not be blank")
     @Column(nullable = false)
     private String name;
 

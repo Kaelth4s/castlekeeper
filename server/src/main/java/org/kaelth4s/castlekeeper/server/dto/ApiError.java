@@ -26,3 +26,5 @@ public class ApiError {
         this.timestamp = Instant.now();
     }
 }
+
+// Lombok generates: getStatus, setStatus, getError, setError, ...

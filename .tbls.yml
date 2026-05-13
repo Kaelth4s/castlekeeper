@@ -1,4 +1,8 @@
-# .tbls.yml
+# .tbls.yml — tbls configuration
+# Reads credentials from environment variables (set by .env locally, or CI secrets)
+# Run: tbls doc
+# Requires: DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD env vars
+
 dsn: postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable
 docPath: docs/database-schema
 schema: public

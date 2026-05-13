@@ -7,24 +7,25 @@
 
 ## 🗺️ Что здесь находится?
 
-- **📦 Документация** — в папке `docs/` лежат описания архитектуры, API и базы данных.
+- **📦 Документация** — в `docs/` лежат [`architecture.md`](docs/architecture.md) (архитектура), [`bot-commands.md`](docs/bot-commands.md) (команды бота), и [`database-schema/`](docs/database-schema/README.md) (схема БД, автосгенерированная).
 - **📝 Заметки** — в `notes/` ты найдёшь планы, canvas-диаграммы, контракты API и вот эту самую страницу.
 - **🤖 Бот** — в `bot/` живёт Java-приложение, которое слушает команды в Telegram и отвечает голосом ключника.
 - **⚙️ Сервер** — в `server/` работает Spring Boot, общается с PostgreSQL и выполняет REST-запросы.
-- **🗄️ База данных** — PostgreSQL 16, поднимается одной командой через Docker Compose.
-- **🔧 Генератор схемы** — в `scripts/` лежит Python-скрипт, превращающий YAML-описание таблиц в Mermaid ERD-диаграмму.
-- **🔧 Конфигурация** — `.env.example`, `docker-compose.yml` и другие технические файлы в корне.
+- **🗄️ База данных** — PostgreSQL 16, поднимается одной командой через Docker Compose. Схема управляется Flyway-миграциями.
+- **📄 Контракт API** — `server/src/main/resources/api-docs.json` (OpenAPI 3.0) и Swagger UI на `localhost:8080/swagger-ui.html`.
+- **🔧 CI** — `.github/workflows/docs.yaml` автоматически генерирует документацию БД через `tbls`.
+- **🔧 Конфигурация** — `.env.example`, `docker-compose.yml`, `.tbls.yml` и другие технические файлы в корне.
 
 ---
 
 ## 🚀 Быстрый старт
 
-1. **Изучи [[README]]** — главный файл проекта с инструкциями по запуску.
-2. **Загляни в [[server]]** — чтобы понять, как устроено API.
-3. **Настрой переменные окружения** — скопируй `.env.example` в `.env` и заполни секреты.
+1. **Изучи [[README]]** — главный файл проекта с полным описанием.
+2. **Загляни в [[server]]** — контракты API (все эндпоинты).
+3. **Настрой переменные окружения** — скопируй `.env.example` в `.env` и заполни.
 4. **Подними базу данных** — `docker compose up -d`
-5. **Сгенерируй схему** — `python scripts/generate_schema.py` (или `.bat` / `.sh`)
-6. **Запусти сервер** — `WIP`
+5. **Запусти сервер** — `cd server && ./mvnw spring-boot:run`
+6. **Открой Swagger UI** — [`http://localhost:8080/swagger-ui.html`](http://localhost:8080/swagger-ui.html)
 7. **Запусти бота** — `WIP`
 8. **Проверь в Telegram** — отправь боту `/start`
 
@@ -39,7 +40,6 @@
 |--------------------|-----------|
 | `/castles` | Список всех замков (текст) |
 | `Меню` → 👁️ Выбрать | Посмотреть замок — выбор из списка |
-| `/search <имя>` | Поиск по названию |
 | `/random` | Случайный замок |
 | `Меню` → 🏗️ Добавить | Wizard: название → описание → автор → годы → высота → материал → ✅ |
 | `Меню` → ✒️ Изменить | Выбор замка → выбор поля → ввод → ✅ |
@@ -50,9 +50,8 @@
 |--------------------|-----------|
 | `/authors` | Список всех авторов (текст) |
 | `Меню` → 👁️ Выбрать | Посмотреть автора — выбор из списка |
-| `/searchauthor <имя>` | Поиск по имени |
 | `Меню` → 🏗️ Добавить | Wizard: имя → тип → ✅ |
-| `Меню` → ✒️ Изменить | Выбор автора → выбор поля → ввод → ✅ |
+| `Меню` → ✒️ Изменить | Выбор автора → выбор поля → ✅ |
 | `Меню` → 💥 Удалить | Выбор автора → ✅/❌ |
 
 ### 🏷️ Типы авторов
@@ -60,8 +59,8 @@
 |--------------------|-----------|
 | `/author_types` | Список типов (текст) |
 | `/addauthor_type` | Wizard: название → описание → ✅ |
-| `Меню` → ✒️ Изменить | Выбор типа → выбор поля → ✅ |
-| `Меню` → 💥 Удалить | Выбор типа → ✅/❌ |
+| `Меню типов` → ✒️ Изменить | Выбор типа → выбор поля → ✅ |
+| `Меню типов` → 💥 Удалить | Выбор типа → ✅/❌ |
 
 ### 🧱 Материалы
 | Команда / Действие | Что делает |
@@ -79,6 +78,9 @@
 | `/menu` | Главный зал (три крыла) |
 | `/help` | Фолиант со всеми командами |
 
+> 📖 Полный справочник команд: [`docs/bot-commands.md`](docs/bot-commands.md)  
+> 🗺️ Визуальная диаграмма диалогов: `notes/bot/dialogs.canvas` (Obsidian Canvas)
+
 ---
 
 ## 📚 Полезные ссылки внутри Vault
@@ -87,9 +89,11 @@
 - [[server]] — контракты REST API (все эндпоинты)
 - [[bot/functional]] — полный список функций бота
 - [[bot/dialogs]] — canvas-диаграмма всех диалогов с inline-клавиатурами
-- [[database/schema]] — ERD-схема базы данных (Mermaid)
-- [[database/schema-draft]] — YAML-описание таблиц и связей
-- [[../.env.example]] — образец переменных окружения
+- [[../docs/architecture]] — архитектура проекта (компоненты, поток запроса)
+- [[../docs/bot-commands]] — справочник команд бота
+- [[../docs/database-schema/README]] — схема БД (автосгенерированная)
+- [[database/schema]] — ERD-схема (Mermaid)
+- [[../.env.example]] — шаблон переменных окружения
 
 > 💡 Используй `Ctrl+O` (или `Cmd+O`) для быстрого поиска файлов по имени.
 
@@ -99,25 +103,28 @@
 
 ```
 castlekeeper/
-├── .obsidian/          # Настройки Obsidian (vault в корне)
-├── bot/                # Telegram-бот (Java 25, Maven)
-├── server/             # REST API (Spring Boot 3, Java 17, Maven)
-├── docs/               # Документация
-├── notes/              # Рабочие заметки и планы
-│   ├── welcome.md
-│   ├── summary.canvas
-│   ├── server.md
-│   ├── bot/
-│   │   ├── dialogs.canvas
-│   │   └── functional.md
-│   └── database/
-│       ├── schema.md
-│       └── schema-draft.yaml
-├── scripts/            # Генератор схемы (Python + YAML → Mermaid)
-├── docker-compose.yml  # PostgreSQL 16
-├── .env.example        # Шаблон переменных окружения
-├── README.md           # Английская версия
-└── README-ru.md        # Русская версия (ты здесь)
+├── .github/workflows/   # CI: генерация схемы БД
+├── .obsidian/           # Настройки Obsidian (vault в корне)
+├── bot/                 # Telegram-бот (Java 25, Maven)
+├── server/              # REST API (Spring Boot 3, Java 17, Maven)
+│   └── src/main/
+│       ├── java/.../server/
+│       │   ├── controller/
+│       │   ├── service/
+│       │   ├── repository/
+│       │   ├── model/        # @Entity — чистый JPA
+│       │   ├── dto/          # Request/Response DTOs — JSON-контракт
+│       │   └── exception/
+│       └── resources/
+│           ├── application.properties
+│           ├── api-docs.json
+│           └── db/migration/   # Flyway SQL (V1–V5)
+├── docs/                # Документация (architecture, bot-commands, DB schema)
+├── notes/               # Рабочие заметки и планы (Obsidian)
+├── docker-compose.yml   # PostgreSQL 16
+├── .env.example         # Шаблон переменных окружения
+├── .tbls.yml            # tbls config для генерации схемы
+└── README.md
 ```
 
 ---

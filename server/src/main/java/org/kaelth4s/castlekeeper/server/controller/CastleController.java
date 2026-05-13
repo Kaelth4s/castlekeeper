@@ -1,16 +1,14 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
-import org.kaelth4s.castlekeeper.server.model.Castle;
+import org.kaelth4s.castlekeeper.server.dto.CastleRequest;
+import org.kaelth4s.castlekeeper.server.dto.CastleResponse;
 import org.kaelth4s.castlekeeper.server.service.CastleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -22,34 +20,33 @@ public class CastleController {
     }
 
     @GetMapping("/castles")
-    public List<Castle> getAll() {
+    public List<CastleResponse> getAll() {
         return service.getAll();
     }
 
     @GetMapping("/castles/{id}")
-    public ResponseEntity<Castle> getById(@PathVariable Long id) {
-        return service.getById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<CastleResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
     @GetMapping("/castles/random")
-    public Optional<Castle> getRandom() {
-        return service.getRandom();
+    public ResponseEntity<CastleResponse> getRandom() {
+        return service.getRandom()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
-    @ApiResponse(responseCode = "201", description = "OK")
     @PostMapping("/castles")
-    public ResponseEntity<Castle> create(@Valid @RequestBody Castle castle) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(castle));
+    public ResponseEntity<CastleResponse> create(@Valid @RequestBody CastleRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.create(request));
     }
 
     @PutMapping("/castles/{id}")
-    public ResponseEntity<Castle> update(@PathVariable Long id, @Valid @RequestBody Castle castle) {
-        return ResponseEntity.ok(service.update(id, castle));
+    public ResponseEntity<CastleResponse> update(@PathVariable Long id,
+                                                  @Valid @RequestBody CastleRequest request) {
+        return ResponseEntity.ok(service.update(id, request));
     }
 
-    @ApiResponse(responseCode = "204", description = "OK")
     @DeleteMapping("/castles/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

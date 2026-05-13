@@ -1,5 +1,7 @@
 package org.kaelth4s.castlekeeper.server.service;
 
+import org.kaelth4s.castlekeeper.server.dto.MaterialRequest;
+import org.kaelth4s.castlekeeper.server.dto.MaterialResponse;
 import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.Material;
 import org.kaelth4s.castlekeeper.server.repository.MaterialRepository;
@@ -7,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -18,23 +19,26 @@ public class MaterialService {
         this.repository = repository;
     }
 
-    public List<Material> getAll() {
-        return repository.findAll();
+    public List<MaterialResponse> getAll() {
+        return repository.findAll().stream().map(this::toResponse).toList();
     }
 
-    public Optional<Material> getById(Long id) {
-        return repository.findById(id);
+    public MaterialResponse getById(Long id) {
+        return repository.findById(id)
+                .map(this::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Material not found with id: " + id));
     }
 
-    public Material create(Material material) {
-        material.setId(null);
-        return repository.save(material);
+    public MaterialResponse create(MaterialRequest request) {
+        Material entity = new Material();
+        entity.setName(request.getName());
+        return toResponse(repository.save(entity));
     }
 
-    public Material update(Long id, Material updated) {
+    public MaterialResponse update(Long id, MaterialRequest request) {
         return repository.findById(id).map(existing -> {
-            existing.setName(updated.getName());
-            return repository.save(existing);
+            existing.setName(request.getName());
+            return toResponse(repository.save(existing));
         }).orElseThrow(() -> new ResourceNotFoundException("Material not found with id: " + id));
     }
 
@@ -43,5 +47,9 @@ public class MaterialService {
             throw new ResourceNotFoundException("Material not found with id: " + id);
         }
         repository.deleteById(id);
+    }
+
+    private MaterialResponse toResponse(Material entity) {
+        return new MaterialResponse(entity.getId(), entity.getName());
     }
 }

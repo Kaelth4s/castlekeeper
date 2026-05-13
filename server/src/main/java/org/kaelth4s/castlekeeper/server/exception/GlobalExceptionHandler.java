@@ -1,5 +1,6 @@
 package org.kaelth4s.castlekeeper.server.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.kaelth4s.castlekeeper.server.dto.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -11,12 +12,14 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFound(ResourceNotFoundException ex, WebRequest request) {
+        log.warn("Resource not found: {}", ex.getMessage());
         return new ApiError(
                 404,
                 "Not Found",
@@ -31,6 +34,7 @@ public class GlobalExceptionHandler {
         String message = ex.getBindingResult().getFieldErrors().stream()
                 .map(e -> e.getField() + ": " + e.getDefaultMessage())
                 .collect(Collectors.joining("; "));
+        log.warn("Validation failed: {}", message);
         return new ApiError(
                 400,
                 "Validation Failed",
@@ -46,6 +50,7 @@ public class GlobalExceptionHandler {
         if (detail != null && detail.length() > 200) {
             detail = detail.substring(0, 200);
         }
+        log.warn("Malformed JSON: {}", detail);
         return new ApiError(
                 400,
                 "Bad Request",
@@ -57,6 +62,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleIllegalArgument(IllegalArgumentException ex, WebRequest request) {
+        log.warn("Illegal argument: {}", ex.getMessage());
         return new ApiError(
                 400,
                 "Bad Request",
@@ -68,6 +74,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ApiError handleGeneral(Exception ex, WebRequest request) {
+        log.error("Unhandled exception", ex);
         return new ApiError(
                 500,
                 "Internal Server Error",
