@@ -3,7 +3,6 @@
 **Telegram bot — castle keeper**  
 Ask it about a castle, and it will answer like a real gatekeeper!
 
----
 
 ## ⚔️ About
 
@@ -13,17 +12,16 @@ Add a new castle via REST API — and the bot is ready to tell its story right a
 
 The project was born from a desire to learn Spring Boot, Docker, and clean architecture — all wrapped in a castle theme.
 
----
 
 ## 🏗 Architecture
 
-| Component          | Technology                       | Description                                   |
-|--------------------|----------------------------------|-----------------------------------------------|
-| **Telegram Bot**   | Java 25 (LTS), Maven             | Processes commands, calls REST API            |
-| **REST API**       | Spring Boot 3, Java 17, Flyway   | CRUD for castles, authors, types, materials   |
-| **Database**       | PostgreSQL 16 (Docker)           | Stores all entities with FK relationships     |
-| **Documentation**  | Obsidian (root vault)            | Notes, architecture, API contracts, canvas    |
-| **Infrastructure** | Docker Compose                   | One-command PostgreSQL setup                  |
+| Component          | Technology                     | Description                                 |
+| ------------------ | ------------------------------ | ------------------------------------------- |
+| **Telegram Bot**   | Java 25 (LTS), Maven           | Processes commands, calls REST API          |
+| **REST API**       | Spring Boot 3, Java 17, Flyway | CRUD for castles, authors, types, materials |
+| **Database**       | PostgreSQL 16 (Docker)         | Stores all entities with FK relationships   |
+| **Documentation**  | Obsidian (root vault)          | Notes, architecture, API contracts, canvas  |
+| **Infrastructure** | Docker Compose                 | One-command PostgreSQL setup                |
 
 ### Data flow
 
@@ -33,7 +31,6 @@ Telegram (user) → Bot (Java 25) → HTTP → Server (Spring Boot 3, Java 17) �
 
 > 💡 Why different Java versions? The bot uses JDK 25 as LTS, the server uses Java 17 for maximum compatibility with Spring Boot 3.x.
 
----
 
 ## 📂 Project Structure
 
@@ -74,7 +71,6 @@ castlekeeper/
 └── README.md
 ```
 
----
 
 ## 🗄 Database Schema
 
@@ -96,7 +92,6 @@ author_type ──< author ──< castle >── material
 
 > 📖 Full schema docs: [`docs/database-schema/`](docs/database-schema/README.md) — auto-generated from the live database via [`tbls`](https://github.com/k1LoW/tbls) in CI.
 
----
 
 ## 🤖 Bot Commands
 
@@ -148,7 +143,6 @@ The bot responds with a medieval narrative style. Selection-based actions use **
 > 📖 Full command reference with dialog flows: [`docs/bot-commands.md`](docs/bot-commands.md)  
 > 🗺️ Visual dialog flow: `notes/bot/dialogs.canvas` (Obsidian Canvas)
 
----
 
 ## 🔌 API Endpoints
 
@@ -211,7 +205,6 @@ The bot responds with a medieval narrative style. Selection-based actions use **
 
 > 📄 All schemas: [Swagger UI](http://localhost:8080/swagger-ui.html) · Machine-readable: [`api-docs.json`](server/src/main/resources/api-docs.json)
 
----
 
 ## 📖 Documentation
 
@@ -224,7 +217,6 @@ The bot responds with a medieval narrative style. Selection-based actions use **
 | `http://localhost:8080/swagger-ui.html` | Interactive API explorer (when server is running) |
 | `notes/bot/dialogs.canvas` | Visual dialog flow (open in Obsidian) |
 
----
 
 ## 📄 License
 
@@ -233,7 +225,6 @@ The bot responds with a medieval narrative style. Selection-based actions use **
 This project is distributed under the MIT license.  
 Full text: [LICENSE](LICENSE)
 
----
 
 ## 👤 Author
 
