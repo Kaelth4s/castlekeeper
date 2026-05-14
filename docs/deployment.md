@@ -29,23 +29,6 @@ Internal ports are **hardcoded** in `docker-compose.yml`. Change only `.env` var
 
 No JDK/Maven required on host — Docker builds everything inside containers.
 
-## Production: domain + HTTPS
-
-Caddy auto-provisions Let's Encrypt:
-
-```bash
-sudo apt install caddy
-```
-
-`/etc/caddy/Caddyfile`:
-```
-castlekeeper.example.com {
-    reverse_proxy localhost:${SERV_PORT}
-}
-```
-
-Set `API_BASE_URL=https://${DOMAIN}/api` in bot's Docker environment and `docker compose up -d --build`.
-
 ## Health checks
 
 ```bash

@@ -4,18 +4,17 @@ All configuration via `.env` file + `application.properties`.
 
 ## Environment variables (`.env`)
 
-| Variable | Required | Default | Purpose |
-|----------|----------|---------|---------|
-| `DB_NAME` | ✅ | — | Database name |
-| `DB_USER` | ✅ | — | Database user |
-| `DB_PASSWORD` | ✅ | — | **SECRET** |
-| `DB_PORT` | ❌ | `5432` | PostgreSQL port on host |
-| `TELEGRAM_BOT_TOKEN` | ✅ | — | **SECRET** — from @BotFather |
-| `SERV_PORT` | ❌ | `8080` | Server port on host |
-| `BOT_PORT` | ❌ | `8081` | Bot health-check port on host |
-| `REDIS_HOST` | ❌ | — | Set to `localhost` to enable Redis |
-| `REDIS_PORT` | ❌ | `6379` | Redis port on host |
-| `DOMAIN` | ❌ | — | Production domain (reverse proxy) |
+| Variable             | Required | Default | Purpose                            |
+| -------------------- | -------- | ------- | ---------------------------------- |
+| `DB_NAME`            | ✅        | —       | Database name                      |
+| `DB_USER`            | ✅        | —       | Database user                      |
+| `DB_PASSWORD`        | ✅        | —       | **SECRET**                         |
+| `DB_PORT`            | ❌        | `5432`  | PostgreSQL port on host            |
+| `TELEGRAM_BOT_TOKEN` | ✅        | —       | **SECRET** — from @BotFather       |
+| `SERV_PORT`          | ❌        | `8080`  | Server port on host                |
+| `BOT_PORT`           | ❌        | `8081`  | Bot health-check port on host      |
+| `REDIS_HOST`         | ❌        | —       | Set to `localhost` to enable Redis |
+| `REDIS_PORT`         | ❌        | `6379`  | Redis port on host                 |
 
 ## Docker Compose — container environment
 
