@@ -1,6 +1,6 @@
 package org.kaelth4s.castlekeeper.server.service;
 
-import org.kaelth4s.castlekeeper.server.dto.*;
+import org.kaelth4s.castlekeeper.dto.*;
 import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.*;
 import org.kaelth4s.castlekeeper.server.repository.*;

@@ -1,8 +1,8 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
 import jakarta.validation.Valid;
-import org.kaelth4s.castlekeeper.server.dto.AuthorRequest;
-import org.kaelth4s.castlekeeper.server.dto.AuthorResponse;
+import org.kaelth4s.castlekeeper.dto.AuthorRequest;
+import org.kaelth4s.castlekeeper.dto.AuthorResponse;
 import org.kaelth4s.castlekeeper.server.service.AuthorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

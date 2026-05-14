@@ -1,7 +1,7 @@
 package org.kaelth4s.castlekeeper.server.service;
 
-import org.kaelth4s.castlekeeper.server.dto.AuthorTypeRequest;
-import org.kaelth4s.castlekeeper.server.dto.AuthorTypeResponse;
+import org.kaelth4s.castlekeeper.dto.AuthorTypeRequest;
+import org.kaelth4s.castlekeeper.dto.AuthorTypeResponse;
 import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.AuthorType;
 import org.kaelth4s.castlekeeper.server.repository.AuthorTypeRepository;

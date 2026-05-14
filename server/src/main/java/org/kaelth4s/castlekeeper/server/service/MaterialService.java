@@ -1,7 +1,7 @@
 package org.kaelth4s.castlekeeper.server.service;
 
-import org.kaelth4s.castlekeeper.server.dto.MaterialRequest;
-import org.kaelth4s.castlekeeper.server.dto.MaterialResponse;
+import org.kaelth4s.castlekeeper.dto.MaterialRequest;
+import org.kaelth4s.castlekeeper.dto.MaterialResponse;
 import org.kaelth4s.castlekeeper.server.exception.ResourceNotFoundException;
 import org.kaelth4s.castlekeeper.server.model.Material;
 import org.kaelth4s.castlekeeper.server.repository.MaterialRepository;

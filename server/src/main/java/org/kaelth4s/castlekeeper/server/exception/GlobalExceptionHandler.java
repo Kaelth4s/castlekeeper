@@ -1,7 +1,7 @@
 package org.kaelth4s.castlekeeper.server.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.kaelth4s.castlekeeper.server.dto.ApiError;
+import org.kaelth4s.castlekeeper.dto.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

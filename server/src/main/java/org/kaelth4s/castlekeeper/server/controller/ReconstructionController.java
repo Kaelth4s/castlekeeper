@@ -1,8 +1,8 @@
 package org.kaelth4s.castlekeeper.server.controller;
 
 import jakarta.validation.Valid;
-import org.kaelth4s.castlekeeper.server.dto.ReconstructionRequest;
-import org.kaelth4s.castlekeeper.server.dto.ReconstructionResponse;
+import org.kaelth4s.castlekeeper.dto.ReconstructionRequest;
+import org.kaelth4s.castlekeeper.dto.ReconstructionResponse;
 import org.kaelth4s.castlekeeper.server.service.ReconstructionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
